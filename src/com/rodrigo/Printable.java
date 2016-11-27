@@ -1,8 +1,10 @@
 package com.rodrigo;
 
-/**
- * Created by rodrigo on 25/11/16.
- */
+import java.util.List;
+
 public interface Printable {
-    String print();
+
+    int getLineCount();
+
+    List<String> print();
 }

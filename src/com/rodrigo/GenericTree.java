@@ -8,31 +8,36 @@ import java.util.List;
  */
 public class GenericTree<T> {
 
-    private Node root;
+    private Node<T> root;
 
-    public void add(T element) {
-        Node node = new Node(element);
-        if (root == null) {
-            root = node;
-        } else {
-            root.addSubtree(node);
-        }
+    public Node<T> getRoot() {
+        return root;
     }
 
-    public class Node {
+    public void setRoot(Node<T> root) {
+        this.root = root;
+    }
 
-        Node parent;
+    public static class Node<T> {
+
+        Node<T> parent;
         T element;
-        List<Node> subtrees;
+        List<Node<T>> subtrees;
 
         public Node(T element) {
             this.element = element;
+            subtrees = new ArrayList<>();
         }
 
-        void addSubtree(Node child) {
-            if (subtrees == null) {
-                subtrees = new ArrayList<>();
-            }
+        public T getElement() {
+            return element;
+        }
+
+        public Node<T> getParent() {
+            return parent;
+        }
+
+        public void addSubtree(Node<T> child) {
 
             if (!subtrees.contains(child)) {
                 subtrees.add(child);
@@ -40,15 +45,19 @@ public class GenericTree<T> {
             }
         }
 
-        void removeSubtree(int position) {
+        public void removeSubtree(int position) {
             subtrees.remove(position);
         }
 
-        Node getSubtree(int position) {
+        public List<Node<T>> getSubtrees() {
+            return subtrees;
+        }
+
+        public Node getSubtree(int position) {
             return subtrees.get(position);
         }
 
-        int getSubtreeSize() {
+        public int getSubtreeSize() {
             return subtrees.size();
         }
     }
