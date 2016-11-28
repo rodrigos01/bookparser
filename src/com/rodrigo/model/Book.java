@@ -6,6 +6,7 @@ import com.rodrigo.Printable;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public class Book extends GenericTree<Printable> {
@@ -117,7 +118,10 @@ public class Book extends GenericTree<Printable> {
 
     public String print() {
         List<String> lines = print((Node) getRoot(), "");
-        lines.addAll(printSummary((Node) getRoot(), ""));
+        List<String> summaryLines = printSummary((Node) getRoot(), "");
+
+        LinkedHashMap<String, Integer> summary = new LinkedHashMap<>();
+
         StringBuilder builder = new StringBuilder();
         int lineNumber = 1;
         int pageCount = -1;
@@ -133,6 +137,11 @@ public class Book extends GenericTree<Printable> {
                 }
                 pageCount++;
             }
+            for (String summaryLine : summaryLines) {
+                if (summaryLine.contains(line)) {
+                    summary.put(summaryLine, pageCount);
+                }
+            }
             if (lineNumber < 10) {
                 builder.append(String.format("%d   %s\n", lineNumber, line));
             } else {
@@ -143,6 +152,17 @@ public class Book extends GenericTree<Printable> {
             } else {
                 lineNumber++;
             }
+        }
+        builder.append(String.format("------------------------------------- Pg. %d\n", pageCount));
+        builder.append("SUMÁRIO\n");
+        for (String line : summary.keySet()) {
+            int page = summary.get(line);
+            builder.append(line);
+            int length = line.length();
+            for (int i = length; i < 42; i++) {
+                builder.append(".");
+            }
+            builder.append(String.format("%d\n", page));
         }
         return builder.toString();
     }
@@ -181,7 +201,7 @@ public class Book extends GenericTree<Printable> {
             if (subtree.getElement() instanceof Subtitle) {
                 subtitleCount++;
             }
-            String subtreePrefix = String.format("%s%d.", prefix, subtitleCount);
+            String subtreePrefix = String.format(" %s%d.", prefix, subtitleCount);
             lines.addAll(printSummary(subtree, subtreePrefix));
         }
         return lines;
